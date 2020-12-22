@@ -1,5 +1,5 @@
 import styles from "./MatrixComponent.module.css";
-import { Matrix, Real } from "./matrix.js";
+import { Matrix } from "./matrix.js";
 
 function rangeInclusive(i, j) {
   let result = [];
@@ -9,14 +9,14 @@ function rangeInclusive(i, j) {
   return result;
 }
 
-export default function MatrixComponent({ matrix: M, editable, onChange }) {
+export default function MatrixComponent({ matrix: M, editable, field: Field, onChange }) {
   function changeCell(i, j, event) {
     let x = parseInt(event.target.value);
     let nextM = M.clone();
     if (isNaN(x)) {
-      nextM.setItem(i, j, new Real(0));
+      nextM.setItem(i, j, new Field(0));
     } else {
-      nextM.setItem(i, j, new Real(x));
+      nextM.setItem(i, j, new Field(x));
     }
     onChange(nextM);
   }

@@ -155,7 +155,7 @@ export class Matrix {
         result.setItem(i, j, this.getItem(i, j).add(other.getItem(i, j)));
       }
     }
-    return new Matrix(result, this.rows, this.cols);
+    return result;
   }
 
   mul(other) {
@@ -435,14 +435,3 @@ export class Matrix {
     return new Matrix(mat, m, n)
   }
 }
-
-/*
-let M = Matrix.Zero(3, 3, new Real(0));
-M.setItem(1, 1, new Real(3));
-M.setItem(3, 2, new Real(5));
-M.setItem(2, 2, new Real(20));
-M.setItem(2, 3, new Real(4));
-M.setItem(3, 3, new Real(1));
-console.log(M.toString());
-console.log("---");
-console.log(M.linearlyIndependentRows().toString());*/
