@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/MatrixCalculator/static/css/main.7b44a7ff.chunk.css",
-    "main.js": "/MatrixCalculator/static/js/main.5b7b94fc.chunk.js",
-    "main.js.map": "/MatrixCalculator/static/js/main.5b7b94fc.chunk.js.map",
+    "main.js": "/MatrixCalculator/static/js/main.fd401b30.chunk.js",
+    "main.js.map": "/MatrixCalculator/static/js/main.fd401b30.chunk.js.map",
     "runtime-main.js": "/MatrixCalculator/static/js/runtime-main.2c367026.js",
     "runtime-main.js.map": "/MatrixCalculator/static/js/runtime-main.2c367026.js.map",
     "static/js/2.f9881cc8.chunk.js": "/MatrixCalculator/static/js/2.f9881cc8.chunk.js",
@@ -15,6 +15,6 @@
     "static/js/runtime-main.2c367026.js",
     "static/js/2.f9881cc8.chunk.js",
     "static/css/main.7b44a7ff.chunk.css",
-    "static/js/main.5b7b94fc.chunk.js"
+    "static/js/main.fd401b30.chunk.js"
   ]
 }
