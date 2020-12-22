@@ -149,17 +149,19 @@ export class Matrix {
   }
 
   add(other) {
-    let result = [];
-    for (let i = 0; i < this.mat.length; i++) {
-      result.push(this.mat[i].add(other.mat[i]));
+    let result = Matrix.Zero(Math.min(this.rows, other.rows), Math.min(this.cols, other.cols));
+    for (let i = 1; i <= result.rows; i++) {
+      for (let j = 1; j <= result.cols; j++) {
+        result.setItem(i, j, this.getItem(i, j).add(other.getItem(i, j)));
+      }
     }
-    return new Matrix(result, this.rows, this.cols)
+    return new Matrix(result, this.rows, this.cols);
   }
 
   mul(other) {
     let result = Matrix.Zero(this.rows, other.cols);
     for (let i = 1; i <= this.rows; i++) {
-      for (let j = 1; j <= this.cols; j++) {
+      for (let j = 1; j <= other.cols; j++) {
         // (AB)_i,j=sum(k=1,n,A_i,k * B_k,j)
         let val = new Real(0);
         for (let k = 1; k <= this.cols; k++) {
