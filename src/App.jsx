@@ -31,7 +31,7 @@ function App() {
           { M1.rows === M1.cols ? (
             <div className={styles.twoMatricesOperators}>
               <p><b>Square Matrix Operations</b></p>
-              <button>B ➞ Inverse A</button>
+              <button onClick={() => setM2(M1.inverse())}>B ➞ Inverse A</button>
             </div>
             ) : null}
         </div>
