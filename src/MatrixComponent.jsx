@@ -1,4 +1,5 @@
 import styles from "./MatrixComponent.module.css";
+import { Matrix, Real } from "./matrix.js";
 
 function rangeInclusive(i, j) {
   let result = [];
@@ -8,53 +9,73 @@ function rangeInclusive(i, j) {
   return result;
 }
 
-export default function MatrixComponent({ matrix, editable, onCellChange }) {
-  function change(i, j, event) {
-    onCellChange({
-      i,
-      j,
-      value: event.target.value
-    })
+export default function MatrixComponent({ matrix: M, editable, onChange }) {
+  function changeCell(i, j, event) {
+    let x = parseInt(event.target.value);
+    let nextM = M.clone();
+    if (isNaN(x)) {
+      nextM.setItem(i, j, new Real(0));
+    } else {
+      nextM.setItem(i, j, new Real(x));
+    }
+    onChange(nextM);
   }
+
+  function changeDim(n, m) {
+    let nextM = Matrix.Zero(n, m);
+    for (let i = 1; i <= M.rows; i++) {
+      for (let j = 1; j <= M.cols; j++) {
+        nextM.setItem(i, j, M.getItem(i, j))
+      }
+    }
+    onChange(nextM);
+  }
+
+  let table = (
+    <table>
+      <tbody>
+        {
+          rangeInclusive(1, M.rows).map(i => (
+            <tr key={i}>
+              {
+                rangeInclusive(1, M.cols).map(j => {
+                  let x = M.getItem(i, j).toString();
+                  let el = editable ?
+                    (<input
+                      style={{width: x.length + "ch"}}
+                      onChange={changeCell.bind(null, i, j)}
+                      value={x} />) :
+                    (<span>{x}</span>);
+                  return (
+                    <td key={i.toString() + "," + j.toString()}>
+                      {el}
+                    </td>
+                  )
+                })
+              }
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  );
 
   return (
     <div className={styles.MatrixComponent}>
       <div className={styles.leftParentheses}></div>
+      { editable ? (
       <div className={styles.buttonContainer}>
-        <table>
-          <tbody>
-            {
-              rangeInclusive(1, matrix.rows).map(i => (
-                <tr key={i}>
-                  {
-                    rangeInclusive(1, matrix.cols).map(j => {
-                      let x = matrix.getItem(i, j).toString();
-                      let el = editable ?
-                        (<input
-                          style={{width: x.length + "ch"}}
-                          onChange={change.bind(null, i, j)}
-                          value={x} />) :
-                        (<span>{x}</span>);
-                      return (
-                        <td key={i.toString() + "," + j.toString()}>
-                          {el}
-                        </td>
-                      )
-                    })
-                  }
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-        <button className={styles.colAdd}>+</button>
-        <button className={styles.colSub}>-</button>
-        <button className={styles.rowAdd}>+</button>
-        <button className={styles.rowSub}>-</button>
-        <button className={styles.rowColAdd}>+</button>
-        <button className={styles.rowColSub}>-</button>
+        {table}
+        <button className={styles.colAdd} onClick={() => changeDim(M.rows, M.cols + 1)}>+</button>
+        <button className={styles.colSub} onClick={() => changeDim(M.rows, M.cols - 1)}>-</button>
+        <button className={styles.rowAdd} onClick={() => changeDim(M.rows + 1, M.cols)}>+</button>
+        <button className={styles.rowSub} onClick={() => changeDim(M.rows - 1, M.cols)}>-</button>
+        <button className={styles.rowColAdd} onClick={() => changeDim(M.rows + 1, M.cols + 1)}>+</button>
+        <button className={styles.rowColSub} onClick={() => changeDim(M.rows - 1, M.cols - 1)}>-</button>
       </div>
-      <div className={styles.rightParentheses}></div>
+        )
+        : table}
+     <div className={styles.rightParentheses}></div>
     </div>
   );
 }
