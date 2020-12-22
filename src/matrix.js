@@ -1,56 +1,3 @@
-/* global BigInt */
-export class Real {
-  className = "Real";
-
-  constructor(x) {
-    this.x = x;
-  }
-
-  add(y) {
-    if (y.className === "Real") {
-      return new Real(this.x + y.x);
-    } else {
-      return y.add(this);
-    }
-  }
-
-  sub(y) {
-    return this.add(y.neg());
-  }
-
-  mul(y) {
-    if (y.className === "Real") {
-      return new Real(this.x * y.x);
-    } else {
-      try {
-        return new Real(y * this.x);
-      } catch {
-        return y.mul(this);
-      }
-    }
-  }
-
-  neg() {
-    return new Real(-this.x);
-  }
-
-  opposite() {
-    return new Real(1 / this.x);
-  }
-
-  toString() {
-    return this.x.toString();
-  }
-
-  isZero() {
-    return this.x === 0;
-  }
-
-  isOne() {
-    return this.x === 1;
-  }
-}
-
 export class Rational {
   className = "Rational";
 
@@ -107,7 +54,7 @@ export class Rational {
     if (y.className === "Rational") {
       return new Rational(this.a * y.b + this.b * y.a, this.b * y.b);
     } else {
-      return new Rational(y) + new Rational(this.a, this.b);
+      return y.add(this);
     }
   }
 
@@ -123,7 +70,7 @@ export class Rational {
     if (y.className === "Rational") {
       return new Rational(this.a * y.a, this.b * y.b);
     } else {
-      return new Rational(y.mul(this.a), this.b);
+      return y.mul(this);
     }
   }
 
@@ -148,7 +95,7 @@ export class Rational {
     return this.a === this.b;
   }
 }
-
+/* global BigInt */
 export function ZnField(n) {
   return class Zn {
     className = "Z" + n.toString();
@@ -162,6 +109,8 @@ export function ZnField(n) {
         return new Zn((this.x + y.x) % n);
       } else if (y.className === "Real") {
         return new Zn((this.x + Math.floor(y.x)) % n);
+      } else if (y.className === "Rational" && y.b === 1n) {
+        return new Zn((this.x + Number(y.a)))
       } else {
         return y.add(this);
       }
@@ -173,9 +122,11 @@ export function ZnField(n) {
 
     mul(y) {
       if (y.className === this.className) {
-        return new Zn((this.x * y.x) % n);
+        return new Zn(this.x * y.x);
       } else if (y.className === "Real") {
-        return new Zn((this.x * Math.floor(y.x)) % n);
+        return new Zn(this.x * Math.floor(y.x));
+      } else if (y.className === "Rational" && y.b === 1n) {
+        return new Zn(this.x * Number(y.a));
       } else {
         return y.mul(this);
       }
@@ -266,8 +217,8 @@ export class Matrix {
     for (let i = 1; i <= this.rows; i++) {
       for (let j = 1; j <= other.cols; j++) {
         // (AB)_i,j=sum(k=1,n,A_i,k * B_k,j)
-        let val = new Rational(0n, 1n);
-        for (let k = 1; k <= this.cols; k++) {
+        let val = this.getItem(i, 1).mul(other.getItem(1, j));
+        for (let k = 2; k <= this.cols; k++) {
           let x = this.getItem(i, k).mul(other.getItem(k, j));
           val = val.add(x);
         }
@@ -538,3 +489,4 @@ export class Matrix {
     return new Matrix(mat, m, n)
   }
 }
+
