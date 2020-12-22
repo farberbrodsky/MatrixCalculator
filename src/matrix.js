@@ -9,44 +9,52 @@ export class Rational {
       return gcd(b, a % b);
     }
 
-    if (b === undefined) {
-      // a/1
-      let as = a.toString()
-      this.str = as;
-      if (as.indexOf("/") !== -1) {
-        if (as.indexOf("/") === (as.length - 1)) {
-          as = as.substring(0, as.indexOf("/"));
-        } else {
-          return new Rational(as.substring(0, as.indexOf("/")), as.substring(as.indexOf("/") + 1))
+    try {
+      if (b === undefined) {
+        // a/1
+        let as = a.toString()
+        this.str = as;
+        if (as.indexOf("/") !== -1) {
+          if (as.indexOf("/") === (as.length - 1)) {
+            as = as.substring(0, as.indexOf("/"));
+          } else {
+            return new Rational(as.substring(0, as.indexOf("/")), as.substring(as.indexOf("/") + 1))
+          }
         }
+        if (as.indexOf(".") !== -1) {
+          this.b = 1n;
+          for (let i = 0; i < (a.length - as.indexOf(".") - 1); i++) {
+            this.b *= 10n;
+          }
+        } else {
+          this.b = 1n;
+        }
+        this.a = BigInt(as.substring(0, as.indexOf(".")) + as.substring(as.indexOf(".") + 1))
+        return;
       }
-      if (as.indexOf(".") !== -1) {
-        this.b = 10n ** BigInt(a.length - as.indexOf(".") - 1);
-      } else {
-        this.b = 1n;
-      }
-      this.a = BigInt(as.substring(0, as.indexOf(".")) + as.substring(as.indexOf(".") + 1))
-      return;
-    }
 
-    a = BigInt(a);
-    b = BigInt(b);
-    let sign = 1;
-    if (a < 0) {
-      sign *= -1;
-      a *= -1n;
-    }
-    if (b < 0) {
-      sign *= -1;
-      b *= -1n;
-    }
-    let g = gcd(a, b);
-    if (g === 0n) {
-      this.a = BigInt(sign) * a;
-      this.b = b;
-    } else {
-      this.a = BigInt(sign) * BigInt(a / g);
-      this.b = b / g;
+      a = BigInt(a);
+      b = BigInt(b);
+      let sign = 1;
+      if (a < 0) {
+        sign *= -1;
+        a *= -1n;
+      }
+      if (b < 0) {
+        sign *= -1;
+        b *= -1n;
+      }
+      let g = gcd(a, b);
+      if (g === 0n) {
+        this.a = BigInt(sign) * a;
+        this.b = b;
+      } else {
+        this.a = BigInt(sign) * BigInt(a / g);
+        this.b = b / g;
+      }
+    } catch {
+      this.a = 0;
+      this.b = 1;
     }
   }
 
@@ -79,6 +87,9 @@ export class Rational {
   }
 
   toString() {
+    if (this.str && this.str[0] === "0") {
+      this.str = this.str.substring(1);
+    }
     if (this.str) return this.str;
     if (this.b !== 1n) {
       return this.a.toString() + "/" + this.b.toString();
