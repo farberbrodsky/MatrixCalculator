@@ -1,3 +1,4 @@
+/* global BigInt */
 export class Real {
   className = "Real";
 
@@ -21,7 +22,11 @@ export class Real {
     if (y.className === "Real") {
       return new Real(this.x * y.x);
     } else {
-      return y.mul(this);
+      try {
+        return new Real(y * this.x);
+      } catch {
+        return y.mul(this);
+      }
     }
   }
 
@@ -43,6 +48,104 @@ export class Real {
 
   isOne() {
     return this.x === 1;
+  }
+}
+
+export class Rational {
+  className = "Rational";
+
+  constructor(a, b) {
+    function gcd(a, b) {
+      if (b === BigInt(0)) {
+        return a;
+      }
+      return gcd(b, a % b);
+    }
+
+    if (b === undefined) {
+      // a/1
+      let as = a.toString()
+      this.str = as;
+      if (as.indexOf("/") !== -1) {
+        if (as.indexOf("/") === (as.length - 1)) {
+          as = as.substring(0, as.indexOf("/"));
+        } else {
+          return new Rational(as.substring(0, as.indexOf("/")), as.substring(as.indexOf("/") + 1))
+        }
+      }
+      if (as.indexOf(".") !== -1) {
+        this.b = 10n ** BigInt(a.length - as.indexOf(".") - 1);
+      } else {
+        this.b = 1n;
+      }
+      this.a = BigInt(as.substring(0, as.indexOf(".")) + as.substring(as.indexOf(".") + 1))
+      return;
+    }
+
+    a = BigInt(a);
+    b = BigInt(b);
+    let sign = 1;
+    if (a < 0) {
+      sign *= -1;
+      a *= -1n;
+    }
+    if (b < 0) {
+      sign *= -1;
+      b *= -1n;
+    }
+    let g = gcd(a, b);
+    if (g === 0n) {
+      this.a = BigInt(sign) * a;
+      this.b = b;
+    } else {
+      this.a = BigInt(sign) * BigInt(a / g);
+      this.b = b / g;
+    }
+  }
+
+  add(y) {
+    if (y.className === "Rational") {
+      return new Rational(this.a * y.b + this.b * y.a, this.b * y.b);
+    } else {
+      return new Rational(y) + new Rational(this.a, this.b);
+    }
+  }
+
+  sub(y) {
+    return new Rational(this.a * y.b - this.b * y.a, this.b * y.b);
+  }
+
+  neg() {
+    return new Rational(-this.a, this.b);
+  }
+
+  mul(y) {
+    if (y.className === "Rational") {
+      return new Rational(this.a * y.a, this.b * y.b);
+    } else {
+      return new Rational(y.mul(this.a), this.b);
+    }
+  }
+
+  opposite() {
+    return new Rational(this.b, this.a);
+  }
+
+  toString() {
+    if (this.str) return this.str;
+    if (this.b !== 1n) {
+      return this.a.toString() + "/" + this.b.toString();
+    } else {
+      return this.a.toString();
+    }
+  }
+
+  isZero() {
+    return this.a === 0;
+  }
+
+  isOne() {
+    return this.a === this.b;
   }
 }
 
@@ -163,7 +266,7 @@ export class Matrix {
     for (let i = 1; i <= this.rows; i++) {
       for (let j = 1; j <= other.cols; j++) {
         // (AB)_i,j=sum(k=1,n,A_i,k * B_k,j)
-        let val = new Real(0);
+        let val = new Rational(0n, 1n);
         for (let k = 1; k <= this.cols; k++) {
           let x = this.getItem(i, k).mul(other.getItem(k, j));
           val = val.add(x);
@@ -233,10 +336,10 @@ export class Matrix {
     let [ops, res] = this.rowReduce();
     for (let i = 1; i <= res.rows; i++) {
       if (res.getItem(i, i).isZero()) {
-        return new Real(0); // not invertible
+        return new Rational(0n, 1n); // not invertible
       }
     }
-    let result = new Real(1);
+    let result = new Rational(1n, 1n);
     for (let op of ops) {
       if (op[0] === "swap") {
         result = result.neg();
@@ -251,7 +354,7 @@ export class Matrix {
     let result = Matrix.Zero(this.cols, this.rows);
     for (let i = 1; i <= this.rows; i++) {
       for (let j = 1; j <= this.cols; j++) {
-        let x = new Real(Math.pow(-1, j + i)).mul(this.minor(j, i).det());
+        let x = new Rational(Math.pow(-1, j + i)).mul(this.minor(j, i).det());
         result.setItem(i, j, x);
       }
     }
@@ -424,14 +527,14 @@ export class Matrix {
     let mat = [];
     for (let i = 0; i < n; i++) {
       for (let j = 0; j < n; j++) {
-        mat.push(j === i ? (one || new Real(1)) : (zero || new Real(0)));
+        mat.push(j === i ? (one || new Rational(1n, 1n)) : (zero || new Rational(0n, 1n)));
       }
     }
     return new Matrix(mat, n, n);
   }
 
   static Zero(m, n, zero) {
-    let mat = new Array(m * n).fill(zero || new Real(0));
+    let mat = new Array(m * n).fill(zero || new Rational(0n, 1n));
     return new Matrix(mat, m, n)
   }
 }

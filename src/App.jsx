@@ -1,11 +1,11 @@
 import MatrixComponent from "./MatrixComponent.jsx";
-import { Matrix, Real, ZnField } from "./matrix.js";
+import { Matrix, Rational, ZnField } from "./matrix.js";
 import { useState } from "react";
 import styles from "./App.module.css"
 
 function App() {
-  let [M1, setM1] = useState(Matrix.Zero(3, 3, new Real(0)));
-  let [M2, setM2] = useState(Matrix.Zero(3, 3, new Real(0)));
+  let [M1, setM1] = useState(Matrix.Zero(3, 3, new Rational(0)));
+  let [M2, setM2] = useState(Matrix.Zero(3, 3, new Rational(0)));
   let [result, setResult] = useState(undefined);
   let [field, setField] = useState("R");
   let [fieldN, setFieldN] = useState(2);
@@ -13,7 +13,7 @@ function App() {
   let fieldClass;
 
   if (field === "R") {
-    fieldClass = Real;
+    fieldClass = Rational;
   } else if (field === "Zn") {
     fieldClass = ZnField(fieldN);
   }

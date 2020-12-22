@@ -11,13 +11,9 @@ function rangeInclusive(i, j) {
 
 export default function MatrixComponent({ matrix: M, editable, field: Field, onChange }) {
   function changeCell(i, j, event) {
-    let x = parseInt(event.target.value);
+    let x = event.target.value;
     let nextM = M.clone();
-    if (isNaN(x)) {
-      nextM.setItem(i, j, new Field(0));
-    } else {
-      nextM.setItem(i, j, new Field(x));
-    }
+    nextM.setItem(i, j, new Field(x));
     onChange(nextM);
   }
 
