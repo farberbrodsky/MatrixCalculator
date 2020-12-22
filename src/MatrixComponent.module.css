@@ -1,0 +1,84 @@
+.MatrixComponent {
+  display: inline-flex;
+  position: relative;
+  text-align: center;
+  font-family: "Times New Roman", "David", serif;
+  font-size: 36px;
+}
+
+.MatrixComponent table {
+  grid-area: table;
+}
+
+.MatrixComponent td {
+  padding: 2px 8px;
+}
+
+.MatrixComponent input {
+  font-family: inherit;
+  font-size: inherit;
+  min-width: 1ch;
+  border: none;
+}
+
+.leftParentheses {
+  border-left: 2px black solid;
+  position: absolute;
+  left: 0px;
+  width: 24px;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.rightParentheses {
+  border-right: 2px black solid;
+  position: absolute;
+  right: 0px;
+  width: 24px;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.columnAdd {
+  padding: 4px 8px;
+  border-radius: 0 50% 50% 0;
+}
+
+.buttonContainer {
+  padding: 0 12px;
+  display: grid;
+  grid-template-areas:
+    "table table colAdd colAdd"
+    "table table colSub colSub"
+    "rowAdd rowSub rowColAdd rowColSub"
+}
+
+.colAdd {
+  grid-area: colAdd;
+}
+
+.colSub {
+  grid-area: colSub;
+}
+
+.rowAdd {
+  grid-area: rowAdd;
+}
+
+.rowSub {
+  grid-area: rowSub;
+}
+
+.rowColAdd {
+  grid-area: rowColAdd;
+}
+
+.rowColSub {
+  grid-area: rowColSub;
+}
+
+.rowColAdd, .rowColSub {
+  padding: 0;
+  height: 44px;
+  width: 22px;
+}
