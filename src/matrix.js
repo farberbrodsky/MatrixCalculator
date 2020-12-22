@@ -87,7 +87,7 @@ export class Rational {
   }
 
   toString() {
-    if (this.str && this.str[0] === "0") {
+    if (this.str && this.str[0] === "0" && this.str.indexOf(".") === -1) {
       this.str = this.str.substring(1);
     }
     if (this.str) return this.str;
