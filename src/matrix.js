@@ -88,7 +88,7 @@ export class Rational {
   }
 
   isZero() {
-    return this.a === 0;
+    return this.a === 0n;
   }
 
   isOne() {
