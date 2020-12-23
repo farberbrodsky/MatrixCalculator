@@ -6,3 +6,24 @@ body {
 h1, h2, h3, h4, h5, h6, p {
   margin: 0;
 }
+
+button {
+  padding: 6px;
+  margin: 4px;
+  border-radius: 4px;
+  font-family: inherit;
+  color: black;
+  background: #e1e1e1;
+  transition: background .05s ease-out;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0.5px 1px 3px #777;
+}
+
+button:hover {
+  background: #d5d5d5;
+}
+
+button:active {
+  background: #bfbfbf;
+}
