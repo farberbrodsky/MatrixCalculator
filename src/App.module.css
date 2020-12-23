@@ -1,6 +1,12 @@
 .title {
   text-align: center;
-  margin: 6px 0;
+  padding: 6px 0;
+}
+
+.flexGrow {
+  flex-basis: 0;
+  flex-shrink: 0;
+  flex-grow: 1;
 }
 
 .twoMatrices {

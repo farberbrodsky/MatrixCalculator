@@ -1,4 +1,5 @@
 import MatrixComponent from "./MatrixComponent.jsx";
+import FieldSelector from "./FieldSelector.jsx";
 import { Matrix, Rational, ZnField } from "./matrix.js";
 import { useState } from "react";
 import styles from "./App.module.css"
@@ -7,42 +8,31 @@ function App() {
   let [M1, setM1] = useState(Matrix.Zero(3, 3, new Rational(0)));
   let [M2, setM2] = useState(Matrix.Zero(3, 3, new Rational(0)));
   let [result, setResult] = useState(undefined);
-  let [field, setField] = useState("R");
-  let [fieldN, setFieldN] = useState(2);
+  let [fieldName, setFieldName] = useState("Rational");
+  let [fieldClass, setFieldClass] = useState([Rational]);
 
-  let fieldClass;
-
-  if (field === "R") {
-    fieldClass = Rational;
-  } else if (field === "Zn") {
-    fieldClass = ZnField(fieldN);
-  }
-
-  function fieldChanged() {
+  function fieldChanged(fieldName, fieldClass) {
     setM1(Matrix.Zero(3, 3, new fieldClass(0)));
     setM2(Matrix.Zero(3, 3, new fieldClass(0)));
+    setFieldClass([fieldClass]);
+    setFieldName(fieldName);
   }
 
   return (
     <div className="App">
-      <select value={field} onChange={(event) => {setField(event.target.value); fieldChanged();}}>
-        <option value="R">R</option>
-        <option value="Zn">Zn</option>
-      </select>
-      <input
-        disabled={field !== "Zn"}
-        value={fieldN}
-        onChange={(event) => {setFieldN(event.target.value); fieldChanged();}}
-        type="number"
-        min="2"
-      />
-      <h1 className={styles.title}>Misha's Matrix Calculator</h1>
+      <div style={{display: "flex"}}>
+        <div className={styles.flexGrow}>
+          <FieldSelector fieldName={fieldName} setField={fieldChanged} />
+        </div>
+        <h1 className={styles.title}>Misha's Matrix Calculator</h1>
+        <div className={styles.flexGrow}></div>
+      </div>
       <div className={styles.twoMatrices}>
         <div className={styles.leftMatrix}>
           <MatrixComponent
             matrix={M1}
             editable={true}
-            field={fieldClass}
+            field={fieldClass[0]}
             onChange={m => {
               setM1(m);
             }}
@@ -70,7 +60,7 @@ function App() {
           <MatrixComponent
             matrix={M2}
             editable={true}
-            field={fieldClass}
+            field={fieldClass[0]}
             onChange={m => {
               setM2(m);
             }}
