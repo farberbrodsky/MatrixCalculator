@@ -8,6 +8,7 @@
 
 .MatrixComponent table {
   grid-area: table;
+  height: 0;
 }
 
 .MatrixComponent td {
@@ -50,7 +51,7 @@
   grid-template-areas:
     "table table colAdd colAdd"
     "table table colSub colSub"
-    "rowAdd rowSub rowColAdd rowColSub"
+    "rowAdd rowSub rowColAdd rowColSub";
 }
 
 .colAdd {
@@ -63,10 +64,12 @@
 
 .rowAdd {
   grid-area: rowAdd;
+  height: 40px;
 }
 
 .rowSub {
   grid-area: rowSub;
+  height: 40px;
 }
 
 .rowColAdd {

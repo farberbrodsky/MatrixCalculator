@@ -1,6 +1,6 @@
 import MatrixComponent from "./MatrixComponent.jsx";
 import FieldSelector from "./FieldSelector.jsx";
-import { Matrix, Rational, ZnField } from "./matrix.js";
+import { Matrix, Rational } from "./matrix.js";
 import { useState } from "react";
 import styles from "./App.module.css"
 
