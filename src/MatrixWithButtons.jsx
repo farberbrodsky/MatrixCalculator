@@ -1,5 +1,6 @@
 import MatrixComponent from "./MatrixComponent.jsx";
 import styles from "./MatrixWithButtons.module.css";
+import RowReduceComponent from "./RowReduceComponent.jsx";
 
 export default function MatrixWithButtons(props) {
   return (
@@ -17,6 +18,9 @@ export default function MatrixWithButtons(props) {
           <button onClick={() =>
             props.setResult({"type": "matrix", "value": props.matrix.transpose()})
           }>Transpose</button>
+          <button onClick={() =>
+            props.setResult({"type": "element", "value": <RowReduceComponent value={props.matrix.rowReduce()} />})
+          }>Row Reduce</button>
         </div>
         <div className={styles.buttons} style={{ 
           display: props.matrix.rows === props.matrix.cols ? "block" : "none"

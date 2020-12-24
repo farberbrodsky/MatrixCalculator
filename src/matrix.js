@@ -500,4 +500,3 @@ export class Matrix {
     return new Matrix(mat, m, n)
   }
 }
-

@@ -33,6 +33,8 @@ function App() {
      );
   } else if (result && result.type === "text") {
     formattedResult = (<p>{ result.value }</p>)
+  } else if (result && result.type === "element") {
+    formattedResult = result.value;
   }
 
   return (
@@ -41,7 +43,7 @@ function App() {
         <div className={styles.flexGrow}>
           <FieldSelector fieldName={fieldName} setField={fieldChanged} />
         </div>
-        <h1 className={styles.title}>Misha's Matrix Calculator</h1>
+        <h1 className={styles.title}>Matrisha</h1>
         <div className={styles.flexGrow}></div>
       </div>
       <div className={styles.twoMatrices}>
