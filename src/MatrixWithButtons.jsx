@@ -4,12 +4,14 @@ import styles from "./MatrixWithButtons.module.css";
 export default function MatrixWithButtons(props) {
   return (
     <div className={styles.matrixWithButtons}>
-      <MatrixComponent
-        matrix={props.matrix}
-        editable={props.editable}
-        field={props.field}
-        onChange={props.onChange}
-      />
+      <div className={styles.alignCenter}>
+        <MatrixComponent
+          matrix={props.matrix}
+          editable={props.editable}
+          field={props.field}
+          onChange={props.onChange}
+        />
+      </div>
       <div>
         <div className={styles.buttons}>
           <button onClick={() =>
@@ -34,7 +36,7 @@ export default function MatrixWithButtons(props) {
           <button onClick={() =>
             props.setResult({"type": "matrix", "value": props.matrix.adj()})
           }>adj</button>
-        </div>
+       </div>
       </div>
     </div>
   );
