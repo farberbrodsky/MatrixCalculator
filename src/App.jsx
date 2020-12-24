@@ -27,8 +27,8 @@ function App() {
           matrix={result.value}
         />
         <br /><br />
-        <button onClick={() => setM1(result)}>Save as A</button>
-        <button onClick={() => setM2(result)}>Save as B</button>
+        <button onClick={() => setM1(result.value)}>Save as A</button>
+        <button onClick={() => setM2(result.value)}>Save as B</button>
       </div>
      );
   } else if (result && result.type === "text") {
