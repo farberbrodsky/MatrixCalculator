@@ -1,4 +1,5 @@
 import MatrixComponent from "./MatrixComponent.jsx";
+import MatrixWithButtons from "./MatrixWithButtons.jsx";
 import FieldSelector from "./FieldSelector.jsx";
 import { Matrix, Rational } from "./matrix.js";
 import { useState } from "react";
@@ -18,6 +19,22 @@ function App() {
     setFieldName(fieldName);
   }
 
+  let formattedResult = undefined;
+  if (result && result.type === "matrix") {
+    formattedResult =  (
+      <div>
+        <MatrixComponent
+          matrix={result.value}
+        />
+        <br /><br />
+        <button onClick={() => setM1(result)}>Save as A</button>
+        <button onClick={() => setM2(result)}>Save as B</button>
+      </div>
+     );
+  } else if (result && result.type === "text") {
+    formattedResult = (<p>{ result.value }</p>)
+  }
+
   return (
     <div className="App">
       <div style={{display: "flex"}}>
@@ -29,13 +46,14 @@ function App() {
       </div>
       <div className={styles.twoMatrices}>
         <div className={styles.leftMatrix}>
-          <MatrixComponent
+          <MatrixWithButtons
             matrix={M1}
             editable={true}
             field={fieldClass[0]}
             onChange={m => {
               setM1(m);
             }}
+            setResult={setResult}
           />
         </div>
         <div className={styles.twoMatricesOperators}>
@@ -46,38 +64,21 @@ function App() {
           { M1.rows === M2.rows && M1.cols === M2.cols ? (
             <button onClick={() => setResult(M1.add(M2))}>A + B</button>
           ) : null}
-          <button onClick={() => setResult(M1.transpose())}>A transpose</button>
-          { M1.rows === M1.cols ? (
-            <div className={styles.twoMatricesOperators}>
-              <p><b>Square Matrix Operations</b></p>
-              <button onClick={() => setResult(M1.inverse())}>Inverse A</button>
-              <button onClick={() => setResult(new Matrix([M1.det()], 1, 1))}>det(A)</button>
-              <button onClick={() => setResult(M1.adj())}>adj(A)</button>
-            </div>
-            ) : null}
         </div>
         <div className={styles.rightMatrix}>
-          <MatrixComponent
+          <MatrixWithButtons
             matrix={M2}
             editable={true}
             field={fieldClass[0]}
             onChange={m => {
               setM2(m);
             }}
+            setResult={setResult}
           />
         </div>
       </div>
       <h1>Result:</h1>
-      { result ? (
-        <div>
-          <MatrixComponent
-            matrix={result}
-          />
-          <br /><br />
-          <button onClick={() => setM1(result)}>Save as A</button>
-          <button onClick={() => setM2(result)}>Save as B</button>
-        </div>
-      ) : null}
+      {formattedResult}
     </div>
   );
 }
