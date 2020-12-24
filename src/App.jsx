@@ -59,10 +59,10 @@ function App() {
         <div className={styles.twoMatricesOperators}>
           <button onClick={() => { let temp = M1; setM1(M2); setM2(temp); }}>Swap A, B</button>
           { M1.cols === M2.rows ? (
-            <button onClick={() => setResult(M1.mul(M2))}>A ⨉ B</button>
+            <button onClick={() => setResult({"type": "matrix", "value": M1.mul(M2)})}>A × B</button>
           ) : null}
           { M1.rows === M2.rows && M1.cols === M2.cols ? (
-            <button onClick={() => setResult(M1.add(M2))}>A + B</button>
+            <button onClick={() => setResult({"type": "matrix", "value": M1.add(M2)})}>A + B</button>
           ) : null}
         </div>
         <div className={styles.rightMatrix}>
