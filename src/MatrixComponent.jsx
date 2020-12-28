@@ -1,4 +1,5 @@
 import styles from "./MatrixComponent.module.css";
+import { useState } from "react";
 import { Matrix } from "./matrix.js";
 
 function rangeInclusive(i, j) {
@@ -27,6 +28,8 @@ export default function MatrixComponent({ matrix: M, editable, field: Field, onC
     onChange(nextM);
   }
 
+  let [elements, setElements] = useState({});
+
   let table = (
     <table>
       <tbody>
@@ -40,6 +43,30 @@ export default function MatrixComponent({ matrix: M, editable, field: Field, onC
                     (<input
                       style={{width: x.length + "ch"}}
                       onChange={changeCell.bind(null, i, j)}
+                      key={i.toString() + "," + j.toString()}
+                      ref={input => setElements(Object.assign(elements, { [`${i},${j}`]: input }))}
+                      onClick={() => elements[`${i},${j}`].select()}
+                      onKeyDown={event => {
+                       try {
+                          const t = event.target;
+                          const n = t.value.length;
+                          const selStart = t.selectionStart;
+                          const selEnd = t.selectionEnd;
+                          if (selStart === n && selEnd === n && event.key === "ArrowRight") {
+                            elements[`${i},${j+1}`].select();
+                            event.preventDefault();
+                          } else if (selStart === 0 && selEnd === 0 && event.key === "ArrowLeft") {
+                            elements[`${i},${j-1}`].select();
+                            event.preventDefault();
+                          } else if (event.key === "ArrowDown") {
+                            elements[`${i+1},${j}`].select();
+                            event.preventDefault();
+                          } else if (event.key === "ArrowUp") {
+                            elements[`${i-1},${j}`].select();
+                            event.preventDefault();
+                          }
+                        } catch (e) {}
+                      }}
                       value={x} />) :
                     (<span>{x}</span>);
                   return (
