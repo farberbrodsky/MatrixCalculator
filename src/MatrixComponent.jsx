@@ -30,8 +30,28 @@ export default function MatrixComponent({ matrix: M, editable, field: Field, onC
 
   let [elements, setElements] = useState({});
 
-  let table = (
-    <table>
+  function onPaste(event) {
+    let txt = event.clipboardData.getData("text");
+    if (txt.substr(0, "\\begin".length) === "\\begin") {
+      // This is LaTeX
+      txt = txt.split("\\\\");
+      txt[0] = txt[0].substr(txt[0].indexOf("}") + 1);
+      let last = txt[txt.length - 1];
+      txt[txt.length - 1] = last.substr(0, last.indexOf("\\"));
+      txt = txt.map(x => x.split("&").map(y => new Field(y.trim())));
+      let newMat = Matrix.Zero(txt.length, txt[0].length);
+      for (let i = 0; i < txt.length; i++) {
+        for (let j = 0; j < txt[i].length; j++) {
+          newMat.setItem(i + 1, j + 1, txt[i][j]);
+        }
+      }
+      onChange(newMat);
+      event.preventDefault();
+    }
+  }
+
+let table = (
+  <table>
       <tbody>
         {
           rangeInclusive(1, M.rows).map(i => (
@@ -43,6 +63,7 @@ export default function MatrixComponent({ matrix: M, editable, field: Field, onC
                     (<input
                       style={{width: x.length + "ch"}}
                       onChange={changeCell.bind(null, i, j)}
+                      onPaste={onPaste}
                       key={i.toString() + "," + j.toString()}
                       ref={input => setElements(Object.assign(elements, { [`${i},${j}`]: input }))}
                       onClick={() => elements[`${i},${j}`].select()}
