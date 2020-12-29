@@ -443,7 +443,7 @@ export class Matrix {
     for (let i = 1; i <= res.rows; i++) {
       let row = [];
       let isZeroRow = true;
-      for (let j = 1; j <= res.cols; j++) {
+      for (let j = 1; j <= Math.min(res.rows, res.cols); j++) {
         if (!res.getItem(i, j).isZero()) {
           isZeroRow = false;
         }
