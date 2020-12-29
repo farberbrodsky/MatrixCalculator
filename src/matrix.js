@@ -356,23 +356,27 @@ export class Matrix {
     }
   }
 
+  isZeroRow(i) {
+    for (let j = 1; j <= this.cols; j++) {
+      if (!this.getItem(i, j).isZero()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   rowReduce() {
     // Move zero rows to the bottom
     let res = this.clone();
     let actions = [];
     let lastZeroRow = res.rows + 1;
     for (let i = 1; i <= (lastZeroRow - 1); i++) {
-      let good = true;
-      for (let k = 1; k <= res.cols; k++) {
-        if (!res.getItem(i, k).isZero()) {
-          good = false;
-          break;
-        }
-      }
-      if (good) {
+      if (res.isZeroRow(i)) {
         lastZeroRow -= 1;
         res.swapRowsInplace(i, lastZeroRow);
-        actions.push(["swap", i, lastZeroRow]);
+        if (!res.isZeroRow(lastZeroRow)) {
+          actions.push(["swap", i, lastZeroRow]);
+        }
       }
     }
     
@@ -451,6 +455,10 @@ export class Matrix {
       }
     }
     return new Matrix(mat, this.cols, matRows).transpose();
+  }
+
+  rank() {
+    return this.linearlyIndependentRows().rows;
   }
   
   transpose() {

@@ -21,6 +21,12 @@ export default function MatrixWithButtons(props) {
           <button onClick={() =>
             props.setResult({"type": "element", "value": <RowReduceComponent value={props.matrix.rowReduce()} />})
           }>Row Reduce</button>
+          <button onClick={() =>
+            props.setResult({"type": "matrix", "value": props.matrix.linearlyIndependentRows()})
+          }>Linearly Independent Rows</button>
+          <button onClick={() =>
+            props.setResult({"type": "text", "value": props.matrix.rank()})
+          }>Rank</button>
         </div>
         <div className={styles.buttons} style={{ 
           display: props.matrix.rows === props.matrix.cols ? "block" : "none"
